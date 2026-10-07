@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Complaint Details – FixMate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="mainSidebar"></aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header" id="mainHeader" data-page-title="Complaint Details"></header>
+
+      <!-- Page Content -->
+      <main class="page-content">
+        <!-- Top Action Nav -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem;">
+          <a href="javascript:history.back()" class="btn btn-outline btn-sm">
+            <i class="fas fa-arrow-left"></i> Back to Listing
+          </a>
+          <div style="display:flex; gap:0.5rem;" id="headerActionToolbar">
+            <!-- Dynamic Actions -->
+          </div>
+        </div>
+
+        <!-- Main Complaint Card -->
+        <div class="card">
+          <div class="card-header">
+            <div>
+              <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.35rem;">
+                <span id="detailComplaintCode" style="font-size:1.4rem; font-weight:800; font-family:monospace; color:var(--primary);">FM-2026-XXXX</span>
+                <span id="detailStatusBadge"></span>
+                <span id="detailPriorityBadge"></span>
+              </div>
+              <h1 id="detailTitle" style="font-size:1.35rem; font-weight:700; color:var(--text-main);">Complaint Summary</h1>
+            </div>
+            <div style="text-align:right;">
+              <div style="font-size:0.78rem; color:var(--text-muted);">Submitted On</div>
+              <div id="detailDate" style="font-size:0.9rem; font-weight:600; color:var(--text-main);">Loading...</div>
+            </div>
+          </div>
+
+          <!-- 5-Step Visual Status Tracker Stepper -->
+          <div style="padding:1rem 0; border-bottom:1px solid var(--border-color); margin-bottom:1.5rem;">
+            <div style="font-size:0.85rem; font-weight:700; color:var(--text-muted); text-transform:uppercase; margin-bottom:0.5rem;">
+              <i class="fas fa-route text-primary"></i> Lifecycle Progress Tracker
+            </div>
+            <div class="status-tracker" id="statusTrackerContainer">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Details Grid -->
+          <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(220px, 1fr)); gap:1.25rem; background:var(--bg-main); padding:1.25rem; border-radius:var(--radius-lg); margin-bottom:1.5rem;">
+            <div>
+              <div class="text-muted" style="font-size:0.78rem; text-transform:uppercase;">Category</div>
+              <div id="detailCategory" style="font-weight:600; font-size:0.95rem; margin-top:2px;">-</div>
+            </div>
+
+            <div>
+              <div class="text-muted" style="font-size:0.78rem; text-transform:uppercase;">Location & Room</div>
+              <div id="detailLocation" style="font-weight:600; font-size:0.95rem; margin-top:2px;">-</div>
+            </div>
+
+            <div>
+              <div class="text-muted" style="font-size:0.78rem; text-transform:uppercase;">Submitted By</div>
+              <div id="detailSubmitter" style="font-weight:600; font-size:0.95rem; margin-top:2px;">-</div>
+            </div>
+
+            <div>
+              <div class="text-muted" style="font-size:0.78rem; text-transform:uppercase;">Assigned Technician</div>
+              <div id="detailTechnician" style="font-weight:600; font-size:0.95rem; margin-top:2px; color:var(--primary);">-</div>
+            </div>
+          </div>
+
+          <!-- Problem Description -->
+          <div style="margin-bottom:1.5rem;">
+            <h3 style="font-size:1rem; margin-bottom:0.5rem; color:var(--text-main);"><i class="fas fa-align-left text-muted"></i> Problem Description</h3>
+            <p id="detailDescription" style="font-size:0.95rem; line-height:1.6; color:var(--text-main); background:#FFFFFF; border:1px solid var(--border-color); padding:1.25rem; border-radius:var(--radius-md);">
+              -
+            </p>
+          </div>
+
+          <!-- Completed Resolution Summary Card -->
+          <div id="detailResolutionBox" style="display:none; background:var(--success-bg); border:1px solid #BBF7D0; border-radius:var(--radius-md); padding:1.25rem; margin-bottom:1.5rem;"></div>
+
+          <!-- User Feedback Prompt Banner -->
+          <div id="userFeedbackBanner" style="display:none; background:#FFFBEB; border:1px solid #FDE68A; border-radius:var(--radius-md); padding:1.25rem; margin-bottom:1.5rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:1rem;">
+              <div>
+                <h4 style="color:#B45309; font-size:1rem; margin-bottom:0.25rem;">
+                  <i class="fas fa-star text-warning"></i> Issue marked as RESOLVED by technician
+                </h4>
+                <p style="font-size:0.85rem; color:#92400E;">Please verify the physical fix and submit your satisfaction feedback to close this ticket.</p>
+              </div>
+              <button onclick="ComplaintsController.openFeedbackModal(document.getElementById('detailComplaintCode').textContent)" class="btn btn-success">
+                <i class="fas fa-check-double"></i> Rate Service & Close Ticket
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2-Column Grid for Timeline & Comments -->
+        <div class="form-row" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+          <!-- Activity Timeline -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-clock-rotate-left text-primary"></i>
+                <span>Activity Timeline</span>
+              </div>
+            </div>
+            <div class="timeline" id="activityTimelineContainer">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+          <!-- Comments Thread -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-comments text-primary"></i>
+                <span>Ticket Comments & Notes</span>
+              </div>
+            </div>
+
+            <div id="commentsListContainer" style="max-height:280px; overflow-y:auto; margin-bottom:1.25rem;">
+              <!-- Rendered via JS -->
+            </div>
+
+            <!-- Add Comment Form -->
+            <form id="addCommentForm">
+              <div class="form-group" style="margin-bottom:0.75rem;">
+                <textarea id="commentText" name="commentText" class="form-control" rows="2" placeholder="Write a comment or reply to technician..." required></textarea>
+              </div>
+              <div style="display:flex; justify-content:flex-end;">
+                <button type="submit" class="btn btn-primary btn-sm">
+                  <i class="fas fa-paper-plane"></i> Add Comment
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- User Feedback Modal Component -->
+  <div class="modal-backdrop" id="feedbackModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fas fa-star text-warning"></i> Service Satisfaction Feedback
+        </div>
+        <button class="modal-close" onclick="ComplaintsController.closeFeedbackModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="feedbackComplaintId">
+        <div style="margin-bottom:1rem;">
+          <div style="font-size:0.85rem; color:var(--text-muted);">Complaint Reference:</div>
+          <div id="feedbackComplaintCode" style="font-size:1.15rem; font-weight:700; color:var(--primary); font-family:monospace;">FM-2026-XXXX</div>
+        </div>
+
+        <div class="form-group" style="text-align:center; padding:1rem 0;">
+          <label class="form-label" style="font-size:1rem; margin-bottom:0.75rem;">How satisfied are you with the resolution?</label>
+          <div class="star-rating" style="justify-content:center;">
+            <input type="radio" id="star5" name="rating" value="5" checked><label for="star5" title="5 stars"><i class="fas fa-star"></i></label>
+            <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 stars"><i class="fas fa-star"></i></label>
+            <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 stars"><i class="fas fa-star"></i></label>
+            <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 stars"><i class="fas fa-star"></i></label>
+            <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 star"><i class="fas fa-star"></i></label>
+          </div>
+          <div class="form-text">Click star to rate our technician's speed & quality.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="feedbackCommentText">Comments & Review Notes</label>
+          <textarea id="feedbackCommentText" class="form-control" rows="3" placeholder="Share your experience or confirm that the breakdown was completely fixed..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="ComplaintsController.closeFeedbackModal()">Cancel</button>
+        <button type="button" class="btn btn-success" onclick="ComplaintsController.submitFeedback()">
+          <i class="fas fa-check"></i> Submit Feedback & Close Ticket
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/complaints.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      FixMateApp.initLayout("my-complaints");
+      ComplaintsController.initComplaintDetails();
+    });
+  </script>
+</body>
+</html>

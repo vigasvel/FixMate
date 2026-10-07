@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Dashboard – FixMate Administration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="mainSidebar"></aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header" id="mainHeader" data-page-title="FixMate Administration"></header>
+
+      <!-- Page Content -->
+      <main class="page-content">
+        <!-- Admin Dashboard Header -->
+        <div class="dashboard-hero">
+          <div class="hero-text">
+            <h1>FixMate Central Administration</h1>
+            <p>Enterprise facility operations overview, live workload balancing, and maintenance performance metrics.</p>
+          </div>
+          <div style="display:flex; gap:0.75rem;">
+            <a href="reports.html" class="btn btn-primary" style="background:#FFFFFF; color:var(--primary); font-weight:700;">
+              <i class="fas fa-file-invoice"></i> Reports & Export
+            </a>
+            <a href="admin-complaints.html" class="btn btn-secondary">
+              <i class="fas fa-tasks"></i> Manage Complaints
+            </a>
+          </div>
+        </div>
+
+        <!-- 6 Core Statistic Metrics Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue"><i class="fas fa-building-circle-check"></i></div>
+            <div class="stat-details">
+              <div class="stat-value" id="adminStatTotal">0</div>
+              <div class="stat-label">Total Complaints</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon amber"><i class="fas fa-clock"></i></div>
+            <div class="stat-details">
+              <div class="stat-value" id="adminStatPending">0</div>
+              <div class="stat-label">Pending / Unassigned</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon cyan"><i class="fas fa-screwdriver-wrench"></i></div>
+            <div class="stat-details">
+              <div class="stat-value" id="adminStatInProgress">0</div>
+              <div class="stat-label">In Progress</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green"><i class="fas fa-circle-check"></i></div>
+            <div class="stat-details">
+              <div class="stat-value" id="adminStatResolved">0</div>
+              <div class="stat-label">Resolved / Closed</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon red"><i class="fas fa-radiation"></i></div>
+            <div class="stat-details">
+              <div class="stat-value" id="adminStatCritical">0</div>
+              <div class="stat-label">Critical Issues</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon purple"><i class="fas fa-user-gear"></i></div>
+            <div class="stat-details">
+              <div class="stat-value" id="adminStatTechs">0</div>
+              <div class="stat-label">Active Technicians</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Critical Alerts Section -->
+        <div style="margin-bottom:1.75rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+            <h3 style="font-size:1.1rem; color:var(--danger); font-weight:700;">
+              <i class="fas fa-triangle-exclamation"></i> Critical Alerts & Safety Bottlenecks
+            </h3>
+            <span class="badge badge-critical">Action Required</span>
+          </div>
+          <div id="adminCriticalAlertsContainer">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Chart.js Analytics Grid (4 Charts) -->
+        <div class="charts-grid">
+          <!-- Chart 1: Status Distribution -->
+          <div class="chart-card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-chart-pie text-primary"></i> Complaints by Status
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="chartComplaintsStatus"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 2: Category Breakdown -->
+          <div class="chart-card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-chart-column text-primary"></i> Issues by Category
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="chartComplaintsCategory"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 3: Priority Breakdown -->
+          <div class="chart-card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-chart-pie text-primary"></i> Complaints by Priority
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="chartComplaintsPriority"></canvas>
+            </div>
+          </div>
+
+          <!-- Chart 4: Monthly Trend -->
+          <div class="chart-card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-chart-line text-primary"></i> Monthly Resolution Trend
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="chartComplaintsTrend"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <!-- Technician Workload Summary -->
+        <div class="card" style="margin-bottom:2rem;">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fas fa-users-gear text-primary"></i> Technician Workload & Capacity
+            </div>
+            <a href="technicians.html" class="btn btn-outline btn-sm">Manage All Staff &rarr;</a>
+          </div>
+          <div class="tech-workload-grid" id="technicianWorkloadGrid">
+            <!-- Rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Recent Complaints Stream Table -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fas fa-clock-rotate-left text-primary"></i> Recent Complaints Stream
+            </div>
+            <a href="admin-complaints.html" class="btn btn-outline btn-sm">Open Full Console &rarr;</a>
+          </div>
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Complaint ID</th>
+                  <th>Issue Details</th>
+                  <th>Category</th>
+                  <th>Priority</th>
+                  <th>Technician</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="adminRecentComplaintsTable">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/admin.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      FixMateApp.initLayout("admin-dashboard");
+      AdminController.initDashboard();
+    });
+  </script>
+</body>
+</html>

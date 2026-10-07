@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Complaints – FixMate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="mainSidebar"></aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header" id="mainHeader" data-page-title="My Complaints"></header>
+
+      <!-- Page Content -->
+      <main class="page-content">
+        <!-- Action Header -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+          <div>
+            <h1 style="font-size:1.5rem; font-weight:700;">Complaint Management Console</h1>
+            <p class="text-muted" style="font-size:0.88rem;">Search, filter, and track resolution progress for all reported issues.</p>
+          </div>
+          <a href="report-problem.html" class="btn btn-primary">
+            <i class="fas fa-plus"></i> + Report New Issue
+          </a>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="table-toolbar">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="complaintSearchInput" class="form-control" placeholder="Search by ID, issue description, location or technician...">
+          </div>
+
+          <div class="filters-group">
+            <select id="statusFilter" class="filter-select">
+              <option value="">All Statuses</option>
+              <option value="SUBMITTED">SUBMITTED</option>
+              <option value="ASSIGNED">ASSIGNED</option>
+              <option value="IN PROGRESS">IN PROGRESS</option>
+              <option value="RESOLVED">RESOLVED</option>
+              <option value="CLOSED">CLOSED</option>
+            </select>
+
+            <select id="categoryFilter" class="filter-select">
+              <!-- Dynamically populated -->
+            </select>
+
+            <select id="priorityFilter" class="filter-select">
+              <option value="">All Priorities</option>
+              <option value="LOW">LOW</option>
+              <option value="MEDIUM">MEDIUM</option>
+              <option value="HIGH">HIGH</option>
+              <option value="CRITICAL">CRITICAL</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Table Container -->
+        <div class="card" style="padding:0; overflow:hidden;">
+          <div style="padding:1.25rem; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-weight:600; font-size:1rem; color:var(--text-main);">
+              <i class="fas fa-list text-primary"></i> Complaints Directory
+            </div>
+            <span class="badge badge-medium" id="complaintsCountBadge">Loading...</span>
+          </div>
+
+          <div class="table-responsive" style="border:none; border-radius:0;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Complaint ID</th>
+                  <th>Issue & Location</th>
+                  <th>Category</th>
+                  <th>Priority</th>
+                  <th>Technician</th>
+                  <th>Status</th>
+                  <th>Submitted</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="userComplaintsTableBody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- User Feedback Modal Component -->
+  <div class="modal-backdrop" id="feedbackModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fas fa-star text-warning"></i> Service Satisfaction Feedback
+        </div>
+        <button class="modal-close" onclick="ComplaintsController.closeFeedbackModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="feedbackComplaintId">
+        <div style="margin-bottom:1rem;">
+          <div style="font-size:0.85rem; color:var(--text-muted);">Complaint Reference:</div>
+          <div id="feedbackComplaintCode" style="font-size:1.15rem; font-weight:700; color:var(--primary); font-family:monospace;">FM-2026-XXXX</div>
+        </div>
+
+        <div class="form-group" style="text-align:center; padding:1rem 0;">
+          <label class="form-label" style="font-size:1rem; margin-bottom:0.75rem;">How satisfied are you with the resolution?</label>
+          <div class="star-rating" style="justify-content:center;">
+            <input type="radio" id="star5" name="rating" value="5" checked><label for="star5" title="5 stars"><i class="fas fa-star"></i></label>
+            <input type="radio" id="star4" name="rating" value="4"><label for="star4" title="4 stars"><i class="fas fa-star"></i></label>
+            <input type="radio" id="star3" name="rating" value="3"><label for="star3" title="3 stars"><i class="fas fa-star"></i></label>
+            <input type="radio" id="star2" name="rating" value="2"><label for="star2" title="2 stars"><i class="fas fa-star"></i></label>
+            <input type="radio" id="star1" name="rating" value="1"><label for="star1" title="1 star"><i class="fas fa-star"></i></label>
+          </div>
+          <div class="form-text">Click star to rate our technician's speed & quality.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="feedbackCommentText">Comments & Review Notes</label>
+          <textarea id="feedbackCommentText" class="form-control" rows="3" placeholder="Share your experience or confirm that the breakdown was completely fixed..."></textarea>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="ComplaintsController.closeFeedbackModal()">Cancel</button>
+        <button type="button" class="btn btn-success" onclick="ComplaintsController.submitFeedback()">
+          <i class="fas fa-check"></i> Submit Feedback & Close Ticket
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/complaints.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      FixMateApp.initLayout("my-complaints");
+      ComplaintsController.initMyComplaints();
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Dashboard – FixMate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="mainSidebar"></aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header" id="mainHeader" data-page-title="User Dashboard"></header>
+
+      <!-- Page Content -->
+      <main class="page-content">
+        <!-- Hero Banner with CTA -->
+        <div class="dashboard-hero">
+          <div class="hero-text">
+            <h1 id="dashboardUserGreeting">Good Morning, Kumaresan K!</h1>
+            <p id="dashboardUserSubtext">Manage and monitor all your campus facility complaints and service requests.</p>
+          </div>
+          <div>
+            <a href="report-problem.html" class="btn btn-primary btn-lg" style="background:#FFFFFF; color:var(--primary); box-shadow:0 4px 14px rgba(0,0,0,0.15); font-weight:700;">
+              <i class="fas fa-plus-circle"></i> + Report a Problem
+            </a>
+          </div>
+        </div>
+
+        <!-- Metric Cards Grid -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue"><i class="fas fa-clipboard-list"></i></div>
+            <div class="stat-details">
+              <div class="stat-value" id="userStatTotal">0</div>
+              <div class="stat-label">Total Complaints</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon amber"><i class="fas fa-clock"></i></div>
+            <div class="stat-details">
+              <div class="stat-value" id="userStatPending">0</div>
+              <div class="stat-label">Pending / New</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon cyan"><i class="fas fa-screwdriver-wrench"></i></div>
+            <div class="stat-details">
+              <div class="stat-value" id="userStatInProgress">0</div>
+              <div class="stat-label">In Progress</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green"><i class="fas fa-circle-check"></i></div>
+            <div class="stat-details">
+              <div class="stat-value" id="userStatResolved">0</div>
+              <div class="stat-label">Resolved / Closed</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Active Stepper Progress Banner -->
+        <div class="card" id="userActiveTrackerCard" style="display:none; margin-bottom:2rem;">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fas fa-spinner fa-spin text-primary"></i>
+              <span>Active Request Tracker: <strong id="activeTrackerCode">FM-2026-XXXX</strong></span>
+            </div>
+            <div style="font-size:0.85rem; color:var(--text-muted);">
+              Assigned to: <strong id="activeTrackerTech" style="color:var(--text-main);">Unassigned</strong>
+            </div>
+          </div>
+          <div>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1rem;">
+              <h3 id="activeTrackerTitle" style="font-size:1.1rem;">Split AC not cooling</h3>
+              <span id="activeTrackerLocation" class="badge badge-medium">Block A - 3rd Floor</span>
+            </div>
+            <div class="status-tracker" id="activeStepperBox">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+        </div>
+
+        <!-- Recent Complaints Section -->
+        <div class="card">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fas fa-list-check text-primary"></i>
+              <span>Recent Complaints</span>
+            </div>
+            <a href="my-complaints.html" class="btn btn-outline btn-sm">View All Complaints &rarr;</a>
+          </div>
+
+          <div class="table-responsive">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Complaint ID</th>
+                  <th>Issue Details</th>
+                  <th>Category</th>
+                  <th>Priority</th>
+                  <th>Technician</th>
+                  <th>Status</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody id="userRecentComplaintsTable">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Announcements / Campus Notice -->
+        <div class="card" style="background:var(--primary-light); border-color:#BFDBFE;">
+          <div style="display:flex; align-items:flex-start; gap:1rem;">
+            <div class="stat-icon blue" style="width:40px; height:40px; font-size:1.1rem; flex-shrink:0;">
+              <i class="fas fa-bullhorn"></i>
+            </div>
+            <div>
+              <h4 style="font-size:1rem; color:var(--primary); margin-bottom:0.25rem;">Facility Maintenance Bulletin</h4>
+              <p style="font-size:0.88rem; color:var(--text-main);">
+                Scheduled power backup test and generator servicing in Block B on Saturday between 06:00 AM - 08:00 AM. For urgent electrical emergency tickets, mark priority as <strong>CRITICAL</strong>.
+              </p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      FixMateApp.initLayout("dashboard");
+      UserDashboard.init();
+    });
+  </script>
+</body>
+</html>

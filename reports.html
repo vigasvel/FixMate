@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reports & Analytics – FixMate Administration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="mainSidebar"></aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header" id="mainHeader" data-page-title="Facility Performance Reports"></header>
+
+      <!-- Page Content -->
+      <main class="page-content">
+        <!-- Title & Export Actions -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+          <div>
+            <h1 style="font-size:1.5rem; font-weight:700;">Facility Reports & Compliance Analytics</h1>
+            <p class="text-muted" style="font-size:0.88rem;">Audit complaint lifecycles, technician performance KPIs, and download audit logs.</p>
+          </div>
+          <div style="display:flex; gap:0.75rem;">
+            <button onclick="ReportsController.printReport()" class="btn btn-outline">
+              <i class="fas fa-print"></i> Print Report
+            </button>
+            <button onclick="ReportsController.exportToCSV()" class="btn btn-primary">
+              <i class="fas fa-file-csv"></i> Export CSV Spreadsheet
+            </button>
+          </div>
+        </div>
+
+        <!-- Filter Criteria Panel -->
+        <div class="card" style="margin-bottom:1.5rem;">
+          <div class="card-header">
+            <div class="card-title">
+              <i class="fas fa-filter text-primary"></i> Report Filter Parameters
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="reportFromDate">From Date</label>
+              <input type="date" id="reportFromDate" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reportToDate">To Date</label>
+              <input type="date" id="reportToDate" class="form-control">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reportCategorySelect">Category</label>
+              <select id="reportCategorySelect" class="form-control">
+                <!-- Dynamically populated -->
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reportPrioritySelect">Priority</label>
+              <select id="reportPrioritySelect" class="form-control">
+                <option value="">All Priorities</option>
+                <option value="LOW">LOW</option>
+                <option value="MEDIUM">MEDIUM</option>
+                <option value="HIGH">HIGH</option>
+                <option value="CRITICAL">CRITICAL</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="reportStatusSelect">Status</label>
+              <select id="reportStatusSelect" class="form-control">
+                <option value="">All Statuses</option>
+                <option value="SUBMITTED">SUBMITTED</option>
+                <option value="ASSIGNED">ASSIGNED</option>
+                <option value="IN PROGRESS">IN PROGRESS</option>
+                <option value="RESOLVED">RESOLVED</option>
+                <option value="CLOSED">CLOSED</option>
+              </select>
+            </div>
+          </div>
+          <div style="display:flex; justify-content:flex-end;">
+            <button onclick="ReportsController.generateReports()" class="btn btn-primary btn-sm">
+              <i class="fas fa-arrows-rotate"></i> Apply Filters & Recalculate
+            </button>
+          </div>
+        </div>
+
+        <!-- Calculated Summary Statistics -->
+        <div class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon blue"><i class="fas fa-file-lines"></i></div>
+            <div class="stat-details">
+              <div class="stat-value" id="repTotalComplaints">0</div>
+              <div class="stat-label">Complaints Filtered</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon green"><i class="fas fa-circle-check"></i></div>
+            <div class="stat-details">
+              <div class="stat-value" id="repResolvedComplaints">0</div>
+              <div class="stat-label">Resolved & Closed</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon amber"><i class="fas fa-clock"></i></div>
+            <div class="stat-details">
+              <div class="stat-value" id="repPendingComplaints">0</div>
+              <div class="stat-label">Pending / In Progress</div>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon cyan"><i class="fas fa-gauge-high"></i></div>
+            <div class="stat-details">
+              <div class="stat-value" id="repResolutionRate">0%</div>
+              <div class="stat-label">Resolution Rate</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Technician Performance & KPI Table -->
+        <div class="card" style="margin-bottom:2rem; padding:0; overflow:hidden;">
+          <div style="padding:1.25rem; border-bottom:1px solid var(--border-color);">
+            <div style="font-weight:600; font-size:1rem; color:var(--text-main);">
+              <i class="fas fa-medal text-warning"></i> Technician Performance & Resolution Ratio
+            </div>
+          </div>
+          <div class="table-responsive" style="border:none; border-radius:0;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Technician & Trade</th>
+                  <th>Assigned Jobs</th>
+                  <th>Completed</th>
+                  <th>Backlog</th>
+                  <th>Completion Rate</th>
+                  <th>Satisfaction Rating</th>
+                </tr>
+              </thead>
+              <tbody id="reportTechPerfTable">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Filtered Records Detail Table -->
+        <div class="card" style="padding:0; overflow:hidden;">
+          <div style="padding:1.25rem; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-weight:600; font-size:1rem; color:var(--text-main);">
+              <i class="fas fa-table text-primary"></i> Filtered Audit Records Ledger
+            </div>
+            <span class="badge badge-medium" id="reportRowsCount">0 Records</span>
+          </div>
+
+          <div class="table-responsive" style="border:none; border-radius:0;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Ticket ID</th>
+                  <th>Title & Location</th>
+                  <th>Category</th>
+                  <th>Reported By</th>
+                  <th>Priority</th>
+                  <th>Technician</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                </tr>
+              </thead>
+              <tbody id="reportDetailTableBody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/reports.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      FixMateApp.initLayout("reports");
+      ReportsController.init();
+    });
+  </script>
+</body>
+</html>

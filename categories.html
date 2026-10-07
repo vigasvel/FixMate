@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Category Management – FixMate Administration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="mainSidebar"></aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header" id="mainHeader" data-page-title="Problem Categories"></header>
+
+      <!-- Page Content -->
+      <main class="page-content">
+        <!-- Title & Action -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+          <div>
+            <h1 style="font-size:1.5rem; font-weight:700;">Complaint Categories & Classifications</h1>
+            <p class="text-muted" style="font-size:0.88rem;">Configure maintenance domain categories and monitor operational ticket counts per division.</p>
+          </div>
+          <button onclick="CategoriesController.openAddModal()" class="btn btn-primary">
+            <i class="fas fa-plus-circle"></i> + Add New Category
+          </button>
+        </div>
+
+        <!-- Category Cards Grid -->
+        <div style="display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:1.5rem;" id="categoriesCardsGrid">
+          <!-- Rendered dynamically -->
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add/Edit Category Modal -->
+  <div class="modal-backdrop" id="categoryModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="categoryModalTitle">Add Category</div>
+        <button class="modal-close" onclick="CategoriesController.closeModal()">&times;</button>
+      </div>
+      <form id="categoryForm">
+        <input type="hidden" id="categoryModalMode" value="create">
+        <input type="hidden" id="categoryEditIdHidden">
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label" for="categoryName">Category Name <span class="required">*</span></label>
+            <input type="text" id="categoryName" name="categoryName" class="form-control" placeholder="e.g. Electrical or Plumbing" required>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="categoryIcon">FontAwesome Icon Class</label>
+            <input type="text" id="categoryIcon" name="categoryIcon" class="form-control" placeholder="e.g. fa-bolt, fa-faucet, fa-snowflake, fa-wifi" value="fa-tools">
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="categoryDesc">Description / Scope Summary</label>
+            <textarea id="categoryDesc" name="categoryDesc" class="form-control" rows="3" placeholder="Describe the types of campus issues under this category..."></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="CategoriesController.closeModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Save Category
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/categories.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      FixMateApp.initLayout("categories");
+      CategoriesController.init();
+    });
+  </script>
+</body>
+</html>

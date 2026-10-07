@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Management – FixMate Administration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="mainSidebar"></aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header" id="mainHeader" data-page-title="User Directory & Accounts"></header>
+
+      <!-- Page Content -->
+      <main class="page-content">
+        <!-- Title & Add Action -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+          <div>
+            <h1 style="font-size:1.5rem; font-weight:700;">Authorized Users & Staff Directory</h1>
+            <p class="text-muted" style="font-size:0.88rem;">Manage user accounts, department affiliations, and account activation states.</p>
+          </div>
+          <button onclick="UsersController.openAddModal()" class="btn btn-primary">
+            <i class="fas fa-user-plus"></i> + Add New User
+          </button>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="table-toolbar">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="userSearchInput" class="form-control" placeholder="Search users by name, email or employee ID...">
+          </div>
+
+          <div class="filters-group">
+            <select id="userRoleFilter" class="filter-select">
+              <option value="">All Roles</option>
+              <option value="user">User</option>
+              <option value="technician">Technician</option>
+              <option value="admin">Admin</option>
+            </select>
+
+            <select id="userDeptFilter" class="filter-select">
+              <option value="">All Departments</option>
+              <option value="Computer Science">Computer Science & Engg</option>
+              <option value="Mechanical">Mechanical Engg</option>
+              <option value="Electrical">Electrical & Electronics</option>
+              <option value="Civil">Civil Engineering</option>
+              <option value="Administration">Administration & Accounts</option>
+              <option value="Library">Library</option>
+            </select>
+
+            <select id="userStatusFilter" class="filter-select">
+              <option value="">All Statuses</option>
+              <option value="active">Active</option>
+              <option value="inactive">Inactive</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Users Table Card -->
+        <div class="card" style="padding:0; overflow:hidden;">
+          <div style="padding:1.25rem; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-weight:600; font-size:1rem; color:var(--text-main);">
+              <i class="fas fa-users text-primary"></i> Registered Users Directory
+            </div>
+            <span class="badge badge-medium" id="usersCountBadge">Loading...</span>
+          </div>
+
+          <div class="table-responsive" style="border:none; border-radius:0;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>User ID</th>
+                  <th>Full Name</th>
+                  <th>Email & Phone</th>
+                  <th>Department</th>
+                  <th>Role</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="usersTableBody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add / Edit User Modal -->
+  <div class="modal-backdrop" id="addUserModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="userModalTitle">Add New User</div>
+        <button class="modal-close" onclick="UsersController.closeModal()">&times;</button>
+      </div>
+      <form id="addUserForm">
+        <input type="hidden" id="userModalMode" value="create">
+        <input type="hidden" id="userEditIdHidden">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="userName">Full Name <span class="required">*</span></label>
+              <input type="text" id="userName" name="userName" class="form-control" placeholder="e.g. Kumaresan K" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="userEmail">Email Address <span class="required">*</span></label>
+              <input type="email" id="userEmail" name="userEmail" class="form-control" placeholder="name@fixmate.edu" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="userPhone">Phone Number</label>
+              <input type="tel" id="userPhone" name="userPhone" class="form-control" placeholder="9876543210">
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="userEmpId">Employee / Student ID</label>
+              <input type="text" id="userEmpId" name="userEmpId" class="form-control" placeholder="e.g. CS157">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="userDepartment">Department <span class="required">*</span></label>
+              <input type="text" id="userDepartment" name="userDepartment" class="form-control" placeholder="e.g. Computer Science & Engg" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="userRole">Account Role <span class="required">*</span></label>
+              <select id="userRole" name="userRole" class="form-control" required>
+                <option value="user">User</option>
+                <option value="technician">Technician</option>
+                <option value="admin">Administrator</option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="UsersController.closeModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Save Account
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/users.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      FixMateApp.initLayout("users");
+      UsersController.init();
+    });
+  </script>
+</body>
+</html>

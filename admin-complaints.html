@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Complaints – FixMate Administration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="mainSidebar"></aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header" id="mainHeader" data-page-title="Complaints Management"></header>
+
+      <!-- Page Content -->
+      <main class="page-content">
+        <!-- Title & Action Bar -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+          <div>
+            <h1 style="font-size:1.5rem; font-weight:700;">Facility Complaints Master Directory</h1>
+            <p class="text-muted" style="font-size:0.88rem;">Review, assign technicians, adjust priority levels, and oversee lifecycle resolution.</p>
+          </div>
+          <div style="display:flex; gap:0.5rem;">
+            <a href="reports.html" class="btn btn-outline">
+              <i class="fas fa-file-export"></i> Export Report
+            </a>
+          </div>
+        </div>
+
+        <!-- Filter & Search Toolbar -->
+        <div class="table-toolbar">
+          <div class="search-box">
+            <i class="fas fa-search"></i>
+            <input type="text" id="adminComplaintSearch" class="form-control" placeholder="Search by ticket ID, user, room or keyword...">
+          </div>
+
+          <div class="filters-group">
+            <select id="adminStatusFilter" class="filter-select">
+              <option value="">All Statuses</option>
+              <option value="SUBMITTED">SUBMITTED (Unassigned)</option>
+              <option value="ASSIGNED">ASSIGNED</option>
+              <option value="IN PROGRESS">IN PROGRESS</option>
+              <option value="RESOLVED">RESOLVED</option>
+              <option value="CLOSED">CLOSED</option>
+            </select>
+
+            <select id="adminCategoryFilter" class="filter-select">
+              <!-- Dynamically populated -->
+            </select>
+
+            <select id="adminPriorityFilter" class="filter-select">
+              <option value="">All Priorities</option>
+              <option value="LOW">LOW</option>
+              <option value="MEDIUM">MEDIUM</option>
+              <option value="HIGH">HIGH</option>
+              <option value="CRITICAL">CRITICAL</option>
+            </select>
+
+            <select id="adminTechFilter" class="filter-select">
+              <!-- Dynamically populated -->
+            </select>
+          </div>
+        </div>
+
+        <!-- Complaints Table Card -->
+        <div class="card" style="padding:0; overflow:hidden;">
+          <div style="padding:1.25rem; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-weight:600; font-size:1rem; color:var(--text-main);">
+              <i class="fas fa-table-list text-primary"></i> All Complaints Master Ledger
+            </div>
+            <span class="badge badge-medium" id="adminComplaintsCountBadge">Loading...</span>
+          </div>
+
+          <div class="table-responsive" style="border:none; border-radius:0;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Ticket ID</th>
+                  <th>Reported By</th>
+                  <th>Issue & Location</th>
+                  <th>Category</th>
+                  <th>Priority</th>
+                  <th>Assigned Technician</th>
+                  <th>Status</th>
+                  <th>Date</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminComplaintsTableBody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Assign Technician Modal -->
+  <div class="modal-backdrop" id="assignTechnicianModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fas fa-user-plus text-primary"></i> Assign Technician to Ticket
+        </div>
+        <button class="modal-close" onclick="AdminController.closeAssignModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="assignComplaintIdHidden">
+
+        <!-- Selected Complaint Info Banner -->
+        <div style="background:var(--bg-main); border:1px solid var(--border-color); border-radius:var(--radius-md); padding:1.25rem; margin-bottom:1.25rem;">
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.4rem;">
+            <span id="assignModalComplaintCode" style="font-weight:800; font-family:monospace; color:var(--primary); font-size:1.1rem;">FM-2026-XXXX</span>
+            <span id="assignModalPriority"></span>
+          </div>
+          <div id="assignModalTitle" style="font-weight:600; font-size:0.95rem; margin-bottom:0.25rem; color:var(--text-main);">-</div>
+          <div id="assignModalLocation" style="font-size:0.8rem; color:var(--text-muted);"><i class="fas fa-map-marker-alt"></i> -</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="assignTechnicianSelect">Select Qualified Technician <span class="required">*</span></label>
+          <select id="assignTechnicianSelect" class="form-control" required>
+            <!-- Rendered dynamically -->
+          </select>
+          <div class="form-text">Technician will receive an instant notification on their dashboard.</div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="AdminController.closeAssignModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="AdminController.submitTechnicianAssignment()">
+          <i class="fas fa-check"></i> Confirm Assignment
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Change Status & Priority Override Modal -->
+  <div class="modal-backdrop" id="editStatusPriorityModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title">
+          <i class="fas fa-sliders text-primary"></i> Modify Ticket Status & Priority
+        </div>
+        <button class="modal-close" onclick="AdminController.closeStatusModal()">&times;</button>
+      </div>
+      <div class="modal-body">
+        <input type="hidden" id="editComplaintIdHidden">
+        <div style="margin-bottom:1.25rem;">
+          <span class="text-muted" style="font-size:0.85rem;">Ticket Reference:</span>
+          <strong id="editModalCode" style="font-family:monospace; color:var(--primary); margin-left:6px;">FM-2026-XXXX</strong>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editStatusSelect">Update Complaint Status <span class="required">*</span></label>
+          <select id="editStatusSelect" class="form-control">
+            <option value="SUBMITTED">SUBMITTED</option>
+            <option value="ASSIGNED">ASSIGNED</option>
+            <option value="IN PROGRESS">IN PROGRESS</option>
+            <option value="RESOLVED">RESOLVED</option>
+            <option value="CLOSED">CLOSED</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="editPrioritySelect">Update Priority Level <span class="required">*</span></label>
+          <select id="editPrioritySelect" class="form-control">
+            <option value="LOW">LOW</option>
+            <option value="MEDIUM">MEDIUM</option>
+            <option value="HIGH">HIGH</option>
+            <option value="CRITICAL">CRITICAL</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline" onclick="AdminController.closeStatusModal()">Cancel</button>
+        <button type="button" class="btn btn-primary" onclick="AdminController.submitStatusPriorityEdit()">
+          <i class="fas fa-save"></i> Save Changes
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/admin.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      FixMateApp.initLayout("admin-complaints");
+      AdminController.initAdminComplaints();
+    });
+  </script>
+</body>
+</html>

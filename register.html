@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Register – FixMate Smart Complaint & Maintenance Management</title>
+  <meta name="description" content="Create a new FixMate account to submit and track facility maintenance requests.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <style>
+    body {
+      background: var(--bg-main);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem 1.5rem;
+    }
+    .register-card {
+      width: 100%;
+      max-width: 680px;
+      background: #FFFFFF;
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow-xl);
+      border: 1px solid var(--border-color);
+      padding: 3rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="register-card">
+    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 2rem; border-bottom: 1px solid var(--border-color); padding-bottom: 1.25rem;">
+      <a href="index.html" class="brand-logo" style="color: var(--secondary);">
+        <div class="brand-icon"><i class="fas fa-wrench"></i></div>
+        <span style="color: var(--secondary);">FixMate</span>
+      </a>
+      <span class="badge badge-medium">Registration</span>
+    </div>
+
+    <div style="margin-bottom: 1.75rem;">
+      <h1 style="font-size: 1.6rem; font-weight: 700; margin-bottom: 0.35rem;">Create Your Account</h1>
+      <p class="text-muted" style="font-size: 0.88rem;">Register to report issues and track maintenance across the campus facilities</p>
+    </div>
+
+    <form id="registerForm" novalidate>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="regName">Full Name <span class="required">*</span></label>
+          <input type="text" id="regName" class="form-control" placeholder="e.g. Kumaresan K" required>
+          <div class="invalid-feedback">Please enter your full name.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regEmail">Institutional Email <span class="required">*</span></label>
+          <input type="email" id="regEmail" class="form-control" placeholder="name@fixmate.edu" required>
+          <div class="invalid-feedback">Please enter a valid email address.</div>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="regPhone">Phone Number <span class="required">*</span></label>
+          <input type="tel" id="regPhone" class="form-control" placeholder="9876543210" required>
+          <div class="invalid-feedback">Please provide a 10-digit phone number.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regEmpId">Employee / Student ID <span class="required">*</span></label>
+          <input type="text" id="regEmpId" class="form-control" placeholder="e.g. CS157 or FAC-201" required>
+          <div class="invalid-feedback">Please enter your ID number.</div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label" for="regDepartment">Department / Office <span class="required">*</span></label>
+        <select id="regDepartment" class="form-control" required>
+          <option value="">-- Select Your Department --</option>
+          <option value="Computer Science & Engg">Computer Science & Engg</option>
+          <option value="Information Technology">Information Technology</option>
+          <option value="Electrical & Electronics">Electrical & Electronics</option>
+          <option value="Mechanical Engg">Mechanical Engg</option>
+          <option value="Civil Engineering">Civil Engineering</option>
+          <option value="Biomedical Engg">Biomedical Engg</option>
+          <option value="Administration & Accounts">Administration & Accounts</option>
+          <option value="Library & Information Science">Library & Information Science</option>
+          <option value="Hostel & Facilities">Hostel & Facilities</option>
+        </select>
+        <div class="invalid-feedback">Please select your department.</div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label" for="regPassword">Password <span class="required">*</span></label>
+          <input type="password" id="regPassword" class="form-control" placeholder="At least 6 characters" required>
+          <div class="invalid-feedback">Password must be at least 6 characters.</div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label" for="regConfirmPassword">Confirm Password <span class="required">*</span></label>
+          <input type="password" id="regConfirmPassword" class="form-control" placeholder="Repeat password" required>
+          <div class="invalid-feedback">Passwords do not match.</div>
+        </div>
+      </div>
+
+      <div class="form-check" style="margin-bottom: 1.5rem;">
+        <input type="checkbox" id="regTerms" required checked>
+        <label for="regTerms" style="font-size: 0.85rem; color: var(--text-main);">
+          I agree to the institutional facility maintenance policies and terms.
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-primary w-100" style="width: 100%; padding: 0.8rem;">
+        <i class="fas fa-user-plus"></i> Complete Registration
+      </button>
+    </form>
+
+    <div style="text-align: center; margin-top: 1.5rem; font-size: 0.88rem; color: var(--text-muted);">
+      Already have an account? <a href="login.html" style="font-weight: 600;">Sign In</a>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.getElementById("registerForm").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const nameInput = document.getElementById("regName");
+      const emailInput = document.getElementById("regEmail");
+      const phoneInput = document.getElementById("regPhone");
+      const empIdInput = document.getElementById("regEmpId");
+      const deptInput = document.getElementById("regDepartment");
+      const passInput = document.getElementById("regPassword");
+      const confPassInput = document.getElementById("regConfirmPassword");
+
+      const name = nameInput.value.trim();
+      const email = emailInput.value.trim();
+      const phone = phoneInput.value.trim();
+      const empId = empIdInput.value.trim();
+      const dept = deptInput.value;
+      const pass = passInput.value;
+      const confPass = confPassInput.value;
+
+      let valid = true;
+
+      if (!name) { nameInput.classList.add("is-invalid"); valid = false; } else nameInput.classList.remove("is-invalid");
+      if (!email || !email.includes("@")) { emailInput.classList.add("is-invalid"); valid = false; } else emailInput.classList.remove("is-invalid");
+      if (!phone || phone.length < 10) { phoneInput.classList.add("is-invalid"); valid = false; } else phoneInput.classList.remove("is-invalid");
+      if (!empId) { empIdInput.classList.add("is-invalid"); valid = false; } else empIdInput.classList.remove("is-invalid");
+      if (!dept) { deptInput.classList.add("is-invalid"); valid = false; } else deptInput.classList.remove("is-invalid");
+      if (!pass || pass.length < 6) { passInput.classList.add("is-invalid"); valid = false; } else passInput.classList.remove("is-invalid");
+      if (pass !== confPass) { confPassInput.classList.add("is-invalid"); valid = false; } else confPassInput.classList.remove("is-invalid");
+
+      if (!valid) return;
+
+      const result = Auth.register({
+        name, email, phone, employee_id: empId, department: dept, role: "user"
+      });
+
+      if (result.success) {
+        FixMateApp.showToast("Account Created!", "Registration successful. Redirecting to login...", "success");
+        setTimeout(() => {
+          window.location.href = "login.html";
+        }, 1200);
+      } else {
+        FixMateApp.showToast("Registration Failed", result.message, "danger");
+      }
+    });
+  </script>
+</body>
+</html>

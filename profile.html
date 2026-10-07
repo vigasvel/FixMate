@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Profile – FixMate</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="mainSidebar"></aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header" id="mainHeader" data-page-title="User Profile"></header>
+
+      <!-- Page Content -->
+      <main class="page-content">
+        <div style="max-width: 860px; margin: 0 auto;">
+          <!-- Profile Overview Card -->
+          <div class="card" style="margin-bottom: 2rem;">
+            <div style="display:flex; align-items:center; gap:1.75rem; flex-wrap:wrap;">
+              <div style="width:90px; height:90px; border-radius:50%; background:linear-gradient(135deg, var(--primary), #1D4ED8); color:#FFFFFF; font-size:2.2rem; font-weight:700; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-md);" id="profileAvatarBig">
+                KK
+              </div>
+              <div style="flex:1;">
+                <div style="display:flex; align-items:center; gap:0.75rem; margin-bottom:0.25rem;">
+                  <h1 id="profileNameDisplay" style="font-size:1.6rem; font-weight:700;">Kumaresan K</h1>
+                  <span id="profileRolePill" class="role-pill user">USER</span>
+                </div>
+                <div id="profileDeptDisplay" style="font-size:0.95rem; color:var(--text-muted); margin-bottom:0.5rem;">
+                  Computer Science & Engineering
+                </div>
+                <div style="display:flex; gap:1.25rem; font-size:0.85rem; color:var(--text-muted); flex-wrap:wrap;">
+                  <span><i class="fas fa-id-badge text-primary"></i> <span id="profileIdDisplay">CS157</span></span>
+                  <span><i class="fas fa-envelope text-primary"></i> <span id="profileEmailDisplay">user@fixmate.edu</span></span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Edit Profile Form Card -->
+          <div class="card" style="margin-bottom: 2rem;">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-user-pen text-primary"></i> Personal Details
+              </div>
+            </div>
+
+            <form id="editProfileForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="profName">Full Name</label>
+                  <input type="text" id="profName" class="form-control" value="Kumaresan K" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="profEmail">Email Address</label>
+                  <input type="email" id="profEmail" class="form-control" value="user@fixmate.edu" required>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="profPhone">Contact Phone</label>
+                  <input type="tel" id="profPhone" class="form-control" value="9876543220">
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="profDept">Department / Office</label>
+                  <input type="text" id="profDept" class="form-control" value="Computer Science & Engg">
+                </div>
+              </div>
+
+              <div style="display:flex; justify-content:flex-end;">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-save"></i> Save Profile Changes
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Change Password Card -->
+          <div class="card">
+            <div class="card-header">
+              <div class="card-title">
+                <i class="fas fa-lock text-primary"></i> Change Password
+              </div>
+            </div>
+
+            <form id="changePasswordForm">
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="currPassword">Current Password</label>
+                  <input type="password" id="currPassword" class="form-control" placeholder="••••••••" required>
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label" for="newPassword">New Password</label>
+                  <input type="password" id="newPassword" class="form-control" placeholder="At least 6 characters" required>
+                </div>
+              </div>
+
+              <div style="display:flex; justify-content:flex-end;">
+                <button type="submit" class="btn btn-outline">
+                  <i class="fas fa-key"></i> Update Password
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      FixMateApp.initLayout("profile");
+      const user = Auth.getCurrentUser();
+
+      if (user) {
+        document.getElementById("profileNameDisplay").textContent = user.name;
+        document.getElementById("profileDeptDisplay").textContent = user.department || user.role;
+        document.getElementById("profileIdDisplay").textContent = user.employee_id || `USER-${user.user_id}`;
+        document.getElementById("profileEmailDisplay").textContent = user.email;
+        document.getElementById("profileRolePill").textContent = user.role.toUpperCase();
+        document.getElementById("profileRolePill").className = `role-pill ${user.role}`;
+        document.getElementById("profileAvatarBig").textContent = user.name.split(' ').map(n=>n[0]).join('').substring(0, 2);
+
+        document.getElementById("profName").value = user.name;
+        document.getElementById("profEmail").value = user.email;
+        document.getElementById("profDept").value = user.department || "";
+      }
+
+      document.getElementById("editProfileForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const updated = {
+          ...user,
+          name: document.getElementById("profName").value.trim(),
+          email: document.getElementById("profEmail").value.trim(),
+          department: document.getElementById("profDept").value.trim()
+        };
+        Auth.setCurrentUser(updated, true);
+        FixMateApp.showToast("Profile Updated", "Your profile details have been saved.", "success");
+        setTimeout(() => location.reload(), 600);
+      });
+
+      document.getElementById("changePasswordForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        document.getElementById("currPassword").value = "";
+        document.getElementById("newPassword").value = "";
+        FixMateApp.showToast("Password Updated", "Your login credentials have been changed.", "success");
+      });
+    });
+  </script>
+</body>
+</html>

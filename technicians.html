@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Technician Staff – FixMate Administration</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/tables.css">
+  <link rel="stylesheet" href="css/forms.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" id="mainSidebar"></aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      <!-- Top Header -->
+      <header class="top-header" id="mainHeader" data-page-title="Technicians Roster"></header>
+
+      <!-- Page Content -->
+      <main class="page-content">
+        <!-- Title & Action -->
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; flex-wrap:wrap; gap:1rem;">
+          <div>
+            <h1 style="font-size:1.5rem; font-weight:700;">Maintenance Technicians & Specialists</h1>
+            <p class="text-muted" style="font-size:0.88rem;">Monitor trade specializations, workload distribution, and on-duty availability status.</p>
+          </div>
+          <button onclick="TechniciansAdminController.openAddModal()" class="btn btn-primary">
+            <i class="fas fa-plus-circle"></i> + Register Technician
+          </button>
+        </div>
+
+        <!-- Technicians Table Card -->
+        <div class="card" style="padding:0; overflow:hidden;">
+          <div style="padding:1.25rem; border-bottom:1px solid var(--border-color); display:flex; justify-content:space-between; align-items:center;">
+            <div style="font-weight:600; font-size:1rem; color:var(--text-main);">
+              <i class="fas fa-user-gear text-primary"></i> Certified Technical Staff Roster
+            </div>
+            <span class="badge badge-medium" id="techCountBadge">Loading...</span>
+          </div>
+
+          <div class="table-responsive" style="border:none; border-radius:0;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Tech ID</th>
+                  <th>Name & Email</th>
+                  <th>Trade Specialization</th>
+                  <th>Phone Number</th>
+                  <th>Availability</th>
+                  <th>Active / Done</th>
+                  <th>Rating</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminTechniciansTableBody">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Add/Edit Technician Modal -->
+  <div class="modal-backdrop" id="technicianModal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <div class="modal-title" id="techModalTitle">Register Technician</div>
+        <button class="modal-close" onclick="TechniciansAdminController.closeModal()">&times;</button>
+      </div>
+      <form id="technicianForm">
+        <input type="hidden" id="techModalMode" value="create">
+        <input type="hidden" id="techEditIdHidden">
+        <div class="modal-body">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="techName">Full Name <span class="required">*</span></label>
+              <input type="text" id="techName" name="techName" class="form-control" placeholder="e.g. Arun Kumar" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="techEmail">Email Address <span class="required">*</span></label>
+              <input type="email" id="techEmail" name="techEmail" class="form-control" placeholder="tech@fixmate.edu" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label" for="techPhone">Phone Number <span class="required">*</span></label>
+              <input type="tel" id="techPhone" name="techPhone" class="form-control" placeholder="9876543210" required>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="techSpecialty">Trade Specialization <span class="required">*</span></label>
+              <select id="techSpecialty" name="techSpecialty" class="form-control" required>
+                <option value="Electrical">Electrical</option>
+                <option value="Plumbing">Plumbing</option>
+                <option value="HVAC">HVAC / Air Conditioning</option>
+                <option value="Networking">Networking & IT</option>
+                <option value="Furniture">Furniture & Carpentry</option>
+                <option value="Cleaning">Cleaning & Sanitation</option>
+                <option value="Infrastructure">Infrastructure & Civil</option>
+                <option value="General Maintenance">General Maintenance</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="techAvailability">Initial Availability State</label>
+            <select id="techAvailability" name="techAvailability" class="form-control">
+              <option value="Available">Available</option>
+              <option value="Busy">Busy</option>
+              <option value="On Leave">On Leave</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="TechniciansAdminController.closeModal()">Cancel</button>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-save"></i> Save Staff Member
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/auth.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/categories.js"></script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      FixMateApp.initLayout("technicians");
+      TechniciansAdminController.init();
+    });
+  </script>
+</body>
+</html>
